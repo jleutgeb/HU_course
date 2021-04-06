@@ -54,6 +54,7 @@ REAL_WORLD_CURRENCY_CODE = 'EUR'
 USE_POINTS = True
 POINTS_CUSTOM_NAME = 'Groschen'
 
+# this is just a comment
 ROOMS = [
     dict(
         name='TU_WZB',
