@@ -1,0 +1,21 @@
+<!--First block shows title of the page-->
+{{ block title }}
+Consent Page
+{{ endblock }}
+
+ <!--Second block shows content of the page-->
+{{ block content }}
+<!--Use paragraphs <p> </p> to display a line of text.-->
+<p> To participate in this experiment, you have to give
+your consent. </p>
+
+<!--Create a single consent button. Important: name it just like the formfield in __init__.py!
+Tell it to return the value 1 and use class "btn btn-primary" from bootstrap library to match rest of otree's style
+-->
+<button name="consents" value=1 class="btn btn-primary">
+    I consent</button>
+<!--The second button doesn't do anything. In order not to submit a page when pressing the button, include the
+type="button" command.
+-->
+<button type="button">I am a red herring</button>
+{{ endblock }}

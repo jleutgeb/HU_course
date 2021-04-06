@@ -1,0 +1,92 @@
+{{ block title }}
+<!--Display information that was pushed to page by calling them with double curly brackets-->
+Round {{ current_round }} out of {{ total_number_rounds }}
+{{ endblock }}
+
+{{ block content }}
+
+<!-- Use ifs to display information only under some conditions. -->
+
+{{ if leadership }}
+<p>The leader contributed {{ leader_contribution }}.</p>
+{{ endif }}
+
+<!--Give a button an ID to call it in a javascript function. Give it type button so it does not submit the page.
+ use the "btn btn-primary" class from bootstrap library for a nice display consistent with other otree styles. -->
+
+<button id="info_button" type="button" class="btn btn-primary">Show My Budget</button>
+
+<!-- Set paragraph's visibility to hidden in style command to hide it.-->
+
+<p style="visibility: hidden" id="budget_paragraph">
+    You have a budget of {{ budget }}.</p>
+<p>The multiplier is {{ multiplier }}.</p>
+
+<!-- Display images by using the <img> command. You can use pictures online or saved in your static folder. -->
+
+{{ if eyes }}
+<img src="{{ static 'eyes.jpg' }}" width=200>
+{{ endif }}
+
+<!-- If you want to display a dynamic value, create a <span> with an id. -->
+
+<p>You are putting <span id="sliderValue"></span> into the group account.</p>
+
+<!-- <div> is a generic command telling the html document that there is a block of information coming.
+Less specific than <p> for example but similar.   -->
+
+<div class="slidecontainer">
+    <!-- create an input for the page with a minimum, maximum, stepsize, initial value.
+     class "slider" creates a default html slider. -->
+    <input type="range" min="0" max="10" step="0.1" value="5" class="slider" id="myChoice">
+</div>
+<!-- A named input allows you to link the javascript inputs to your oTree code. oTree expects this page to contain
+an input named "contribution". By hiding it you can record other information (like the number of clicks on an element
+for example) without subjects directly interacting with it. -->
+<input type="hidden" name="contribution" id="id_contribution">
+{{ formfield_errors 'contribution' }}
+    {{ next_button }}
+
+{{ endblock }}
+
+<!-- block scripts contains javascript commands -->
+
+{{ block scripts }}
+<!-- declare individual scripts with the <script> command -->
+
+<script>
+    // This function has no input variables. when called it reaches out to the element with id "budget_paragraph"
+    // if the budget paragraph's visibility is hidden, switch it to visible. else don't do anything
+
+    function reveal() {
+        if (document.getElementById("budget_paragraph").style.visibility === "hidden") {
+            document.getElementById("budget_paragraph").style.visibility = "visible"
+        } else {}
+    }
+
+    // This part of the script attaches an event listener to the info button. As soon as it is clicked, it calls the
+    // reveal function
+    document.getElementById("info_button").addEventListener("click", reveal)
+</script>
+
+<script>
+    // this script first defines some local variables to make it easier to access individual elements later
+    var slider = document.getElementById("myChoice");
+    var output = document.getElementById("sliderValue");
+    var data = document.getElementById("id_contribution");
+
+    // output is the span that displays the slider's current position.
+    // When loading the page, update the span's HTML text by the slider value
+    // at the same time, update the hidden input's value by the slider value
+    output.innerHTML = slider.value;
+    data.value = slider.value;
+
+    // finally, if there is an input on the slider, call a function that updates the values with the new ones.
+    slider.oninput = function() {
+        output.innerHTML = this.value;
+        data.value = this.value;
+    }
+</script>
+
+
+{{ endblock }}

@@ -1,0 +1,174 @@
+{{ block title }}
+    Round {{ current_round }} out of {{ total_number_rounds }}
+{{ endblock }}
+
+<!-- You can declare styles in the styles block. Start every style with the <style> command. -->
+
+
+{{ block styles }}
+<style> .toprow {
+    border-style: solid;
+    border-width: 2px 0px 1px 0px;
+}
+</style>
+<style>
+    .bottomrow {
+        border-style: solid;
+        border-width: 1px 0px 2px 0px;
+    }
+</style>
+
+<!-- The code below is just copy/paste from Highcharts line chart default. -->
+
+<style>
+    .highcharts-figure, .highcharts-data-table table {
+    min-width: 360px;
+    max-width: 800px;
+    margin: 1em auto;
+}
+
+.highcharts-data-table table {
+	font-family: Verdana, sans-serif;
+	border-collapse: collapse;
+	border: 1px solid #EBEBEB;
+	margin: 10px auto;
+	text-align: center;
+	width: 100%;
+	max-width: 500px;
+}
+.highcharts-data-table caption {
+    padding: 1em 0;
+    font-size: 1.2em;
+    color: #555;
+}
+.highcharts-data-table th {
+	font-weight: 600;
+    padding: 0.5em;
+}
+.highcharts-data-table td, .highcharts-data-table th, .highcharts-data-table caption {
+    padding: 0.5em;
+}
+.highcharts-data-table thead tr, .highcharts-data-table tr:nth-child(even) {
+    background: #f8f8f8;
+}
+.highcharts-data-table tr:hover {
+    background: #f1f7ff;
+}
+</style>
+
+{{ endblock }}
+
+{{ block content }}
+<p>Out of your budget of {{ budget }} you contributed {{ contribution }}.</p>
+<p>Opponent 1 contributed {{ others_contribs.0 }}.</p>
+<p>Opponent 2 contributed {{ others_contribs.1 }}.</p>
+<p>In total, all players put {{ total }} into the joint account.</p>
+<p>Hence, you earned {{ payoff }}.</p>
+
+<!-- Creating a very simple table. Tables are constructed row by row, then element by element. -->
+
+<table>
+    <tr>
+        <!-- Assign styles to individual cells by calling the class that we declared above. -->
+        <th class="toprow">Actor</th>
+        <th class="toprow">Contribution</th>
+    </tr>
+
+    <tr>
+        <td>You</td>
+        <td>{{ contribution }}</td>
+    </tr>
+
+    <tr>
+        <td>Opponent 1</td>
+        <td>{{ others_contribs.0 }}</td>
+    </tr>
+
+    <tr>
+        <td>Opponent 2</td>
+        <td>{{ others_contribs.1 }}</td>
+    </tr>
+
+    <tr>
+        <td class="bottomrow">Total</td>
+        <td class="bottomrow">{{ total }}</td>
+    </tr>
+</table>
+
+<!-- Build a figure using Highcharts -->
+
+<figure class="highcharts-figure">
+    <div id="feedback_graph"></div>
+</figure>
+
+
+{{ next_button }}
+{{ endblock }}
+
+{{ block scripts }}
+<!-- Use the Highcharts scripts to use their charts. -->
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<script>
+    Highcharts.chart('feedback_graph', {
+
+    title: {
+        text: 'Contributions'
+    },
+    yAxis: {
+        title: {
+            text: 'Contribution'
+        }
+    },
+
+    xAxis: {
+    		title: {
+        		text: 'Round'
+        }
+    },
+
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+
+    plotOptions: {
+        series: {
+            label: {
+                connectorAllowed: false
+            },
+            pointStart: 1
+        }
+    },
+
+    // call variables in javascript that were defined in the js_vars function in otree like below:
+    series: [{
+        name: 'allMyContributions',
+        data: js_vars.allMyContributions
+    }, {
+        name: 'allGroupContributions',
+        data: js_vars.allGroupContributions
+    }],
+
+    responsive: {
+        rules: [{
+            condition: {
+                maxWidth: 500
+            },
+            chartOptions: {
+                legend: {
+                    layout: 'horizontal',
+                    align: 'center',
+                    verticalAlign: 'bottom'
+                }
+            }
+        }]
+    }
+
+});
+</script>
+{{ endblock }}
